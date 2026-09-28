@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NVDA quote snapshots · FINTECH 590</title>
+  <style>
+    :root { color-scheme: light; --blue:#012169; --ink:#162844; --muted:#53647c; --line:#d8e1ed; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#fff; color:var(--ink); font-family:"Times New Roman",Georgia,serif; }
+    header { max-width:1360px; margin:auto; padding:28px 32px 16px; }
+    .course { color:var(--blue); font-size:15px; letter-spacing:.06em; margin:0 0 12px; }
+    h1 { color:var(--blue); font-size:clamp(30px,4vw,46px); line-height:1.1; margin:0 0 12px; font-weight:normal; }
+    .intro { font-size:19px; margin:0; line-height:1.45; }
+    main { max-width:1360px; margin:auto; padding:0 32px 28px; }
+    nav { display:flex; gap:12px; margin:20px 0 16px; flex-wrap:wrap; border-bottom:1px solid var(--line); padding-bottom:12px; }
+    button { font:18px "Times New Roman",Georgia,serif; color:var(--blue); background:white; border:1px solid var(--line); border-radius:4px; padding:11px 20px; cursor:pointer; min-height:44px; }
+    button[aria-selected="true"] { background:var(--blue); color:white; border-color:var(--blue); }
+    button:focus-visible, a:focus-visible { outline:3px solid #e8a640; outline-offset:3px; }
+    h2 { font-size:25px; font-weight:normal; color:var(--blue); margin:0 0 7px; }
+    .summary { font-size:18px; line-height:1.5; margin:0 0 8px; }
+    .tip { color:var(--muted); font-size:16px; line-height:1.45; margin:0 0 14px; }
+    .explorer { width:100%; height:1000px; border:1px solid var(--line); background:white; }
+    .direct { font-size:16px; margin:8px 0 0; }
+    a { color:var(--blue); }
+    footer { border-top:1px solid var(--line); padding-top:16px; margin-top:20px; color:var(--muted); font-size:16px; line-height:1.4; }
+    [hidden] { display:none!important; }
+    @media(max-width:700px) { header {padding:22px 18px 12px;} main {padding:0 18px 22px;} .intro,.summary {font-size:17px;} button {padding:10px 13px;} .explorer {height:1100px;} }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="course">FINTECH 590 · GROUP 2</p>
+    <h1>NVDA quote snapshots</h1>
+    <p class="intro">Explore the data in PyGWalker. Then check what the sampling leaves out.</p>
+  </header>
+  <main>
+    <nav role="tablist" aria-label="Choose a dataset">
+      <button id="quotes-tab" type="button" role="tab" aria-selected="true" aria-controls="quotes-panel">Day snapshots</button>
+      <button id="book-tab" type="button" role="tab" aria-selected="false" aria-controls="book-panel">10-second order book</button>
+    </nav>
+    <section id="quotes-panel" role="tabpanel" aria-labelledby="quotes-tab">
+      <h2>4,606 snapshots · 22 Sep 2026</h2>
+      <p class="summary"><strong>90.2%</strong> have a spread of 1–2 cents. Snapshots arrive roughly five seconds apart.</p>
+      <p class="tip">Choose a chart tab inside PyGWalker, or drag fields to build your own. Aggregation is off in the prepared charts; for a new chart, turn it off with the cube icon. The time axis shows minutes after 09:30 Eastern: 0 = 09:30, 390 = 16:00.</p>
+      <iframe class="explorer" id="quotes-frame" title="Interactive NVDA day snapshots in PyGWalker" src="quotes.html" allow="clipboard-read; clipboard-write"></iframe>
+      <p class="direct"><a href="quotes.html" target="_blank" rel="noopener">Open the explorer full-screen</a></p>
+    </section>
+    <section id="book-panel" role="tabpanel" aria-labelledby="book-tab" hidden>
+      <h2>What happened between two snapshots?</h2>
+      <p class="summary">15:45:10–15:45:20 Eastern: <strong>82 raw order-book records</strong>, with <strong>74 usable records</strong> after filtering.</p>
+      <p class="tip">Eight locked or crossed quotes have best bid ≥ best ask. The charts show the remaining records, using seconds after 15:45:10 on the horizontal axis. Records are not individual trades or necessarily distinct price changes.</p>
+      <iframe class="explorer" id="book-frame" title="Interactive NVDA order-book window in PyGWalker" data-src="orderbook.html" allow="clipboard-read; clipboard-write"></iframe>
+      <p class="direct"><a href="orderbook.html" target="_blank" rel="noopener">Open the explorer full-screen</a></p>
+    </section>
+    <footer>Historical educational sample. Mid is the bid–ask midpoint, not a traded price. The order-book window uses local receipt timestamps and does not establish an exhaustive market event history. No live feed, trading connection, or Python kernel is required. PyGWalker 0.5.0.1.</footer>
+  </main>
+  <script>
+    const tabs = [...document.querySelectorAll('[role="tab"]')];
+    function selectTab(tab) {
+      for (const item of tabs) {
+        const active = item === tab;
+        item.setAttribute('aria-selected', String(active));
+        document.getElementById(item.getAttribute('aria-controls')).hidden = !active;
+      }
+      if (tab.id === 'book-tab') {
+        const frame = document.getElementById('book-frame');
+        if (!frame.getAttribute('src')) frame.src = frame.dataset.src;
+      }
+    }
+    for (const tab of tabs) {
+      tab.addEventListener('click', () => selectTab(tab));
+      tab.addEventListener('keydown', event => {
+        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+          event.preventDefault();
+          const next = tabs[(tabs.indexOf(tab) + 1) % tabs.length];
+          selectTab(next); next.focus();
+        }
+      });
+    }
+  </script>
+</body>
+</html>
