@@ -1,3 +1,3 @@
 # AI Use Note
 
-Claude and ChatGPT/Codex helped us draft Python code, troubleshoot PyGWalker, and edit slide text and speaking notes. We checked the NVDA quote count, 1–2 cent spread share, snapshot intervals, and order-book filtering against the source data with pandas. We remain responsible for the calculations, demo, and explanations we present.
+For the NVDA section, I collected the data, chose the analysis and demo sequence, and rewrote my speaking notes myself. ChatGPT/Codex helped with Python troubleshooting and slide designing. I checked the quote counts, spread distribution, snapshot intervals, and order-book filtering with pandas.
